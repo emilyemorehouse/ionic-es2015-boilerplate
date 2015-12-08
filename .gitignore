@@ -12,6 +12,5 @@ _*
 *.keystore
 *.zip
 
-www/css/ionic.app.css
-www/css/ionic.app.min.css
+www/css/*.css
 www/js

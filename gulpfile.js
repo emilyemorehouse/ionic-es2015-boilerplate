@@ -10,14 +10,14 @@ var babel = require("gulp-babel");
 var plumber = require("gulp-plumber");
 
 var paths = {
-  sass: ['./scss/**/*.scss'],
-  es6: ['./src/**/*.js']
+  sass: ['./src/scss/**/*.scss'],
+  es6: ['./src/js/**/*.js']
 };
 
 gulp.task('default', ['sass', 'babel']);
 
 gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
+  gulp.src('./src/scss/ionic.app.scss')
     .pipe(plumber())
     .pipe(sass())
     .on('error', sass.logError)
