@@ -1,0 +1,16 @@
+node_modules/
+platforms/
+plugins/
+
+_*
+.DS_STORE
+*.log
+*.swp
+*.orig
+*.apk
+*.rej
+*.keystore
+*.zip
+
+www/css/ionic.app.css
+www/css/ionic.app.min.css
