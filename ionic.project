@@ -3,7 +3,7 @@
   "app_id": "",
   "gulpStartupTasks": [
     "sass",
-    "babel",
+    "browserify",
     "watch"
   ],
   "watchPatterns": [

@@ -1,20 +1,27 @@
-var gulp = require('gulp');
-var gutil = require('gulp-util');
+var babelify= require('babelify');
 var bower = require('bower');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
+var browserify = require('browserify');
+var del = require('del');
+var gulp = require('gulp');
 var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sh = require('shelljs');
-var babel = require("gulp-babel");
+var ngAnnotate = require('gulp-ng-annotate');
 var plumber = require("gulp-plumber");
+var rename = require('gulp-rename');
+var sass = require('gulp-sass');
+var gutil = require('gulp-util');
+var sh = require('shelljs');
+var buffer = require('vinyl-buffer');
+var source = require('vinyl-source-stream');
+
+
 
 var paths = {
   sass: ['./src/scss/**/*.scss'],
   es6: ['./src/js/**/*.js']
 };
+var isDevelopment = true;
 
-gulp.task('default', ['sass', 'babel']);
+gulp.task('default', ['sass', 'browserify']);
 
 gulp.task('sass', function(done) {
   gulp.src('./src/scss/ionic.app.scss')
@@ -30,16 +37,23 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
-gulp.task("babel", function () {
-  return gulp.src(paths.es6)
-    .pipe(plumber())
-    .pipe(babel())
-    .pipe(gulp.dest("./www/js"));
+//Browserify
+gulp.task('browserify',function(){
+  return browserify({
+    entries:'./src/js/app.js',
+    debug: (isDevelopment?true:false),
+    transform: [["babelify", { "presets": ["es2015"] } ]]
+  })
+  .bundle()
+  .pipe(source('./bundle.js'))
+  .pipe(buffer())
+  .pipe(ngAnnotate())
+  .pipe(gulp.dest('./www/js'));
 });
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.es6, ['babel']);
+  gulp.watch(paths.es6, ['browserify']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -60,4 +74,10 @@ gulp.task('git-check', function(done) {
     process.exit(1);
   }
   done();
+});
+
+gulp.task('clean', function(){
+  del([
+    './www/js/**/*'
+  ]);
 });
